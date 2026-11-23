@@ -1,0 +1,8 @@
+{
+  "name": "KFUPM Exam Timer",
+  "description": "Precision exam countdown timer inspired by the modern spirit and iconic Water Tower of King Fahd University of Petroleum & Minerals.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
