@@ -22,6 +22,7 @@ import {
   formatRemainingTime,
   formatWallClock,
 } from './utils/time';
+import { ExamProgressBar } from './components/ExamProgressBar';
 import { HallModeOverlay } from './components/HallModeOverlay';
 import { KfupmTowerMonogram } from './components/KfupmTowerMonogram';
 import { PresetModal } from './components/PresetModal';
@@ -421,13 +422,6 @@ export default function App() {
           ? 'text-[#008540] dark:text-[#10A859]'
           : 'text-[#4D5E58] dark:text-[#98B2BB]';
 
-  const progressFillClass =
-    phase === 'completed' || phase === 'critical'
-      ? 'bg-[#B91C1C] dark:bg-[#EF4444]'
-      : phase === 'warning'
-        ? 'bg-[#B89014] dark:bg-[#DAC961]'
-        : 'bg-[#008540] dark:bg-[#10A859]';
-
   return (
     <div className="min-h-screen bg-[#F7F8F6] dark:bg-[#07161B] text-[#13201B] dark:text-[#F1F5F4] transition-colors duration-200">
       {/* Clean 3-Zone Top Bar */}
@@ -569,18 +563,19 @@ export default function App() {
                 {formatRemainingTime(remainingSeconds, session.showSeconds)}
               </div>
 
-              {/* Progress Track & Live Clock */}
-              <div className="mt-7">
-                <div className="h-2 w-full rounded-full bg-[#E8ECE7] dark:bg-[#132C35] overflow-hidden">
-                  <div
-                    className={`h-full rounded-full origin-left transition-transform duration-300 ${progressFillClass}`}
-                    style={{
-                      transform: `scaleX(${Math.min(1, Math.max(0, progressPercent / 100))})`,
-                    }}
-                  />
-                </div>
+              {/* Prominent Progress Bar & Live Clock */}
+              <div className="mt-7 space-y-5">
+                <ExamProgressBar
+                  totalSeconds={totalSeconds}
+                  remainingSeconds={remainingSeconds}
+                  warningMinutes={activePreset.warningMinutes}
+                  finalWarningMinutes={activePreset.finalWarningMinutes}
+                  phase={phase}
+                  showSeconds={session.showSeconds}
+                  size="default"
+                />
 
-                <div className="mt-4 flex flex-wrap items-center justify-between gap-4 text-sm text-[#4D5E58] dark:text-[#98B2BB]">
+                <div className="flex flex-wrap items-center justify-between gap-4 text-sm text-[#4D5E58] dark:text-[#98B2BB]">
                   <div className="flex items-center gap-2">
                     <Clock className="w-4 h-4 text-[#008540] dark:text-[#10A859] shrink-0" />
                     <span>
@@ -774,6 +769,8 @@ export default function App() {
         isRunning={isRunning}
         remainingSeconds={remainingSeconds}
         totalSeconds={totalSeconds}
+        warningMinutes={activePreset.warningMinutes}
+        finalWarningMinutes={activePreset.finalWarningMinutes}
         phase={phase}
         statusLabel={statusLabel}
         session={session}

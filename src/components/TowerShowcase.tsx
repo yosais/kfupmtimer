@@ -16,16 +16,16 @@ export const GENUINE_KFUPM_PHOTOS: GenuineTowerPhoto[] = [
   {
     id: 'clock-tower',
     label: 'Clock Tower',
-    src: '/assets/aistudio/images1_905e136f.jpg',
-    alt: 'The iconic concrete KFUPM Clock Tower rising against blue skies in Dhahran',
+    src: '/src/assets/images/kfupm_tower_hd_closeup_1795532973929.jpg',
+    alt: 'High-resolution photograph of the iconic concrete KFUPM Clock Tower rising against blue skies in Dhahran',
     caption: 'The KFUPM Tower · Dhahran',
     objectPosition: 'object-center',
   },
   {
     id: 'campus-view',
     label: 'Campus',
-    src: '/assets/aistudio/images_46814545.jpg',
-    alt: 'The KFUPM Tower seen across campus gardens and flowering trees under blue skies',
+    src: '/src/assets/images/kfupm_campus_hd_gardens_1795532974088.jpg',
+    alt: 'High-resolution photograph of the KFUPM Tower seen across campus gardens and flowering trees under blue skies',
     caption: 'KFUPM Campus Gardens · Dhahran',
     objectPosition: 'object-center',
   },
@@ -71,8 +71,8 @@ export function TowerShowcase({
 
   return (
     <aside
-      aria-label="Genuine KFUPM Tower photograph"
-      className="relative flex flex-col justify-end overflow-hidden rounded-2xl border border-[#DCE1DC] dark:border-[#1A353F] bg-[#0B2229] min-h-[380px] lg:h-full"
+      aria-label="High-resolution KFUPM Tower photograph"
+      className="relative flex flex-col justify-end overflow-hidden rounded-2xl border border-[#DCE1DC] dark:border-[#1A353F] bg-[#0B2229] min-h-[420px] lg:h-full"
     >
       {!showFallback ? (
         <AnimatePresence mode="wait">
@@ -81,17 +81,18 @@ export function TowerShowcase({
             src={photo.src}
             alt={photo.alt}
             referrerPolicy="no-referrer"
+            decoding="async"
             onError={() => setFailedSrc(photo.src)}
-            initial={{ opacity: 0.25, scale: 1.03 }}
+            initial={{ opacity: 0.25, scale: 1.02 }}
             animate={
               isCompleted
-                ? { opacity: 1, scale: 1.035 }
+                ? { opacity: 1, scale: 1.025 }
                 : isRunning
-                  ? { opacity: 1, scale: 1.02 }
+                  ? { opacity: 1, scale: 1.01 }
                   : { opacity: 1, scale: 1 }
             }
             exit={{ opacity: 0.25 }}
-            transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
             className={`absolute inset-0 h-full w-full object-cover ${photo.objectPosition} will-change-transform`}
           />
         </AnimatePresence>
@@ -107,8 +108,8 @@ export function TowerShowcase({
       {isRunning && !isCompleted && (
         <motion.div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#008540]/20 via-transparent to-transparent"
-          animate={{ opacity: [0.2, 0.55, 0.2] }}
+          className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#008540]/18 via-transparent to-transparent"
+          animate={{ opacity: [0.2, 0.5, 0.2] }}
           transition={{ duration: 5.5, repeat: Infinity, ease: 'easeInOut' }}
         />
       )}
@@ -123,13 +124,13 @@ export function TowerShowcase({
         />
       )}
 
-      {/* Measured contrast scrim for legibility */}
+      {/* Measured contrast scrim for crisp bottom caption */}
       <div
-        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#061419]/90 via-[#061419]/25 to-[#061419]/10"
+        className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#061419]/88 via-[#061419]/18 to-[#061419]/10"
         aria-hidden="true"
       />
 
-      {/* Top photo view switcher for the 3 genuine images */}
+      {/* Top photo view switcher */}
       <div className="relative z-10 flex items-center justify-end p-4 mb-auto">
         <div
           role="tablist"
@@ -148,7 +149,7 @@ export function TowerShowcase({
                 className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors whitespace-nowrap shrink-0 ${
                   active
                     ? 'bg-white text-[#07161B]'
-                    : 'text-white/80 hover:text-white'
+                    : 'text-white/85 hover:text-white'
                 }`}
               >
                 {item.label}
@@ -158,21 +159,17 @@ export function TowerShowcase({
         </div>
       </div>
 
-      {/* Bottom caption & progress bar */}
+      {/* Bottom caption & clearer status bar */}
       <div className="relative z-10 p-6 text-white">
-        <p className="text-xs text-white/80">{photo.caption}</p>
+        <p className="text-sm font-semibold tracking-tight text-white">{photo.caption}</p>
         <div className="mt-3 pt-3 border-t border-white/15">
           <div className="flex items-center justify-between text-xs text-white/90 mb-2">
             <span>{statusLabel}</span>
-            <span className="tabular-clock font-medium">{clampedProgress}% elapsed</span>
+            <span className="tabular-clock font-semibold">{clampedProgress}% elapsed</span>
           </div>
           <div
-            className="h-1.5 w-full rounded-full bg-white/20 overflow-hidden"
-            role="progressbar"
-            aria-valuenow={clampedProgress}
-            aria-valuemin={0}
-            aria-valuemax={100}
-            aria-label="Exam elapsed progress"
+            className="h-2.5 w-full rounded-full bg-white/25 overflow-hidden"
+            aria-hidden="true"
           >
             <div
               className={`h-full rounded-full transition-transform duration-300 origin-left ${progressBarColor}`}

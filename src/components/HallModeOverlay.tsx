@@ -14,6 +14,7 @@ import {
 import { KFUPM_SEVEN_HABITS } from '../data/habits';
 import { ExamSessionConfig, TimerPhase } from '../types/exam';
 import { formatRemainingTime, formatWallClock } from '../utils/time';
+import { ExamProgressBar } from './ExamProgressBar';
 import { KfupmTowerMonogram } from './KfupmTowerMonogram';
 import { GENUINE_KFUPM_PHOTOS } from './TowerShowcase';
 
@@ -23,6 +24,8 @@ interface HallModeOverlayProps {
   isRunning: boolean;
   remainingSeconds: number;
   totalSeconds: number;
+  warningMinutes: number;
+  finalWarningMinutes: number;
   phase: TimerPhase;
   statusLabel: string;
   session: ExamSessionConfig;
@@ -46,6 +49,8 @@ export function HallModeOverlay({
   isRunning,
   remainingSeconds,
   totalSeconds,
+  warningMinutes,
+  finalWarningMinutes,
   phase,
   statusLabel,
   session,
@@ -99,24 +104,12 @@ export function HallModeOverlay({
 
   if (!isOpen) return null;
 
-  const progressRatio =
-    totalSeconds > 0
-      ? Math.min(1, Math.max(0, (totalSeconds - remainingSeconds) / totalSeconds))
-      : 0;
-
   const digitColorClass =
     phase === 'completed' || phase === 'critical'
       ? 'text-[#B91C1C] dark:text-[#F87171]'
       : phase === 'warning'
         ? 'text-[#9A7400] dark:text-[#DAC961]'
         : 'text-[#0E1E19] dark:text-[#F4F8F7]';
-
-  const progressColorClass =
-    phase === 'completed' || phase === 'critical'
-      ? 'bg-[#B91C1C] dark:bg-[#EF4444]'
-      : phase === 'warning'
-        ? 'bg-[#B89014] dark:bg-[#DAC961]'
-        : 'bg-[#008540] dark:bg-[#10A859]';
 
   const currentHabit = KFUPM_SEVEN_HABITS[habitIdx];
 
@@ -171,9 +164,6 @@ export function HallModeOverlay({
         <div className="lg:col-span-8 xl:col-span-9 flex flex-col justify-center px-8 sm:px-14 py-6 overflow-y-auto">
           <div className="flex items-center justify-between text-base sm:text-lg font-medium text-[#4D5E58] dark:text-[#9DB6BF] mb-3">
             <span>{statusLabel}</span>
-            <span className="tabular-clock">
-              {Math.round(progressRatio * 100)}% Elapsed
-            </span>
           </div>
 
           <div
@@ -184,11 +174,16 @@ export function HallModeOverlay({
             {formatRemainingTime(remainingSeconds, session.showSeconds)}
           </div>
 
-          {/* Hairline Progress Track */}
-          <div className="mt-7 w-full h-2.5 rounded-full bg-[#E3E7E2] dark:bg-[#132B34] overflow-hidden">
-            <div
-              className={`h-full rounded-full origin-left transition-transform duration-300 ${progressColorClass}`}
-              style={{ transform: `scaleX(${progressRatio})` }}
+          {/* Auditorium-Scale Progress Bar */}
+          <div className="mt-7 w-full">
+            <ExamProgressBar
+              totalSeconds={totalSeconds}
+              remainingSeconds={remainingSeconds}
+              warningMinutes={warningMinutes}
+              finalWarningMinutes={finalWarningMinutes}
+              phase={phase}
+              showSeconds={session.showSeconds}
+              size="hall"
             />
           </div>
 
